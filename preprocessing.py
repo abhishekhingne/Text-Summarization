@@ -1,6 +1,6 @@
 import nltk
 import re
-import collections
+
 
 class preprocessing():
 
