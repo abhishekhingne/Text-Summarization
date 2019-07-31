@@ -23,7 +23,8 @@ class PreProcessing:
         string = string.strip()
         return string
 
-    def decontracted_string(self, string):
+    @staticmethod
+    def decontracted_string(string):
         string = re.sub(r"won\'t", "will not", string)
         string = re.sub(r"can\'t", "can not", string)
         string = re.sub(r"ain\'t", "is not", string)
