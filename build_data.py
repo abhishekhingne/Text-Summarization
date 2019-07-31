@@ -64,6 +64,8 @@ class BuildData:
         for _, word in sorted(self.reversed_word_dict.items()):
             try:
                 emd = glove_emd.get(word)
+                if emd is None:
+                    emd = np.zeros([emb_size])
             except KeyError:
                 emd = np.zeros([emb_size])
             word_emd_list.append(emd)
