@@ -4,7 +4,8 @@ import re
 
 class PreProcessing:
 
-    def read_data(self, path):
+    @staticmethod
+    def read_data(path):
         return nltk.line_tokenize(nltk.load(path))
 
     def clean_string(self, string):
