@@ -2,11 +2,10 @@ import nltk
 import re
 
 
-class preprocessing():
+class PreProcessing:
 
     def read_data(self, path):
         return nltk.line_tokenize(nltk.load(path))
-
 
     def clean_string(self, string):
         self.decontracted_string(string)
