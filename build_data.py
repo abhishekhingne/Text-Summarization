@@ -57,18 +57,3 @@ class BuildData:
         for _ in range(num_epoch):
             for batch_num in range(0, len(x), batch_size):
                 yield x[batch_num:(batch_num+batch_size)], y[batch_num:(batch_num+batch_size)]
-
-    def init_glove_embedding(self, emb_size=300):
-        glove_emd = load_glove_embeddings(GLOVE_EMBEDDING_PATH)
-        word_emd_list = []
-        for _, word in sorted(self.reversed_word_dict.items()):
-            try:
-                emd = glove_emd.get(word)
-                if emd is None:
-                    emd = np.zeros([emb_size])
-            except KeyError:
-                emd = np.zeros([emb_size])
-            word_emd_list.append(emd)
-        word_emd_list[2] = np.random.normal(0, 1, emb_size)
-        word_emd_list[3] = np.random.normal(0, 1, emb_size)
-        return word_emd_list

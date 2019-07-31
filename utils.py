@@ -1,4 +1,5 @@
 import numpy as np
+from config import *
 
 
 def load_glove_embeddings(glove_path):
@@ -11,3 +12,19 @@ def load_glove_embeddings(glove_path):
         embedding = np.array(split_line[1:]).astype(np.float)
         glove_embedding_dict[word] = embedding
     return glove_embedding_dict
+
+
+def init_glove_embedding(reversed_word_dict, emb_size=300):
+    glove_emd = load_glove_embeddings(GLOVE_EMBEDDING_PATH)
+    word_emd_list = []
+    for _, word in sorted(reversed_word_dict.items()):
+        try:
+            emd = glove_emd.get(word)
+            if emd is None:
+                emd = np.zeros([emb_size])
+        except KeyError:
+            emd = np.zeros([emb_size])
+        word_emd_list.append(emd)
+    word_emd_list[2] = np.random.normal(0, 1, emb_size)
+    word_emd_list[3] = np.random.normal(0, 1, emb_size)
+    return word_emd_list
