@@ -24,7 +24,7 @@ def init_glove_embedding(reversed_word_dict, emb_size=300):
                 emd = np.zeros([emb_size])
         except KeyError:
             emd = np.zeros([emb_size])
-        word_emd_list.append(emd)
-    word_emd_list[2] = np.random.normal(0, 1, emb_size)
-    word_emd_list[3] = np.random.normal(0, 1, emb_size)
-    return word_emd_list
+        word_emd_list.append(emd.astype('float32'))
+    word_emd_list[2] = np.random.normal(0, 1, emb_size).astype('float32')
+    word_emd_list[3] = np.random.normal(0, 1, emb_size).astype('float32')
+    return np.array(word_emd_list)
