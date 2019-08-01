@@ -6,3 +6,4 @@ WORD_DICT_PATH = "output/word_dict.pickle"
 MAX_ARTICLE_LEN = 50
 MAX_SUMMARY_LEN = 15
 GLOVE_EMBEDDING_PATH = "data/glove.6B.300d.txt"
+MODEL_PATH = "model/"
