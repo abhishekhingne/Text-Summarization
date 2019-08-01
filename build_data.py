@@ -11,6 +11,10 @@ class BuildData:
         self.preprocess = PreProcessing()
         self.word_dict = dict()
         self.reversed_word_dict = dict()
+        self.article_list = ""
+        self.summary_list = ""
+
+    def load_data(self):
         self.article_list = self.get_clean_data_list(ARTICLE_PATH)
         self.summary_list = self.get_clean_data_list(SUMMARY_PATH)
 
