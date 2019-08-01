@@ -5,15 +5,16 @@ from utils import *
 
 class Model(object):
 
-    def __init__(self, reversed_dict, article_max_len, summary_max_len, args, forward_only=False):
+    def __init__(self, reversed_dict, article_max_len, summary_max_len, embedding_size, num_hidden, num_layers,
+                 learning_rate, beam_width, keep_prob, forward_only=False):
         self.vocabulary_size = len(reversed_dict)
-        self.embedding_size = args.embedding_size
-        self.num_hidden = args.num_hidden
-        self.num_layers = args.num_layers
-        self.learning_rate = args.learning_rate
-        self.beam_width = args.beam_width
+        self.embedding_size = embedding_size
+        self.num_hidden = num_hidden
+        self.num_layers = num_layers
+        self.learning_rate = learning_rate
+        self.beam_width = beam_width
         if not forward_only:
-            self.keep_prob = args.keep_prob
+            self.keep_prob = keep_prob
         else:
             self.keep_prob = 1.0
         self.cell = tf.nn.rnn_cell.BasicLSTMCell
