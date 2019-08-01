@@ -30,13 +30,14 @@ class Model(object):
         self.global_step = tf.Variable(0, trainable=False)
 
         with tf.name_scope("embedding"):
-            if not forward_only and args.glove:
-                init_embeddings = tf.constant(init_glove_embedding(reversed_dict, self.embedding_size), dtype=tf.float32)
-            else:
-                init_embeddings = tf.random_uniform([self.vocabulary_size, self.embedding_size], -1.0, 1.0)
+            # if not forward_only and args.glove:
+            init_embeddings = tf.constant(init_glove_embedding(reversed_dict, self.embedding_size), dtype=tf.float32)
+            # else:
+            # init_embeddings = tf.random_uniform([self.vocabulary_size, self.embedding_size], -1.0, 1.0)
             self.embeddings = tf.get_variable("embeddings", initializer=init_embeddings)
             self.encoder_emb_inp = tf.transpose(tf.nn.embedding_lookup(self.embeddings, self.X), perm=[1, 0, 2])
-            self.decoder_emb_inp = tf.transpose(tf.nn.embedding_lookup(self.embeddings, self.decoder_input), perm=[1, 0, 2])
+            self.decoder_emb_inp = tf.transpose(tf.nn.embedding_lookup(self.embeddings, self.decoder_input),
+                                                perm=[1, 0, 2])
 
         with tf.name_scope("encoder"):
             fw_cells = [self.cell(self.num_hidden) for _ in range(self.num_layers)]
@@ -70,7 +71,8 @@ class Model(object):
                 self.logits = tf.transpose(
                     self.projection_layer(self.decoder_output), perm=[1, 0, 2])
                 self.logits_reshape = tf.concat(
-                    [self.logits, tf.zeros([self.batch_size, summary_max_len - tf.shape(self.logits)[1], self.vocabulary_size])], axis=1)
+                    [self.logits, tf.zeros([self.batch_size, summary_max_len - tf.shape(self.logits)[1],
+                                            self.vocabulary_size])], axis=1)
             else:
                 tiled_encoder_output = tf.contrib.seq2seq.tile_batch(
                     tf.transpose(self.encoder_output, perm=[1, 0, 2]), multiplier=self.beam_width)
