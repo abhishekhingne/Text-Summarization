@@ -6,7 +6,7 @@ class PreProcessing:
 
     @staticmethod
     def read_data(path):
-        return nltk.line_tokenize(nltk.load(path))[:100]
+        return nltk.line_tokenize(nltk.load(path))
 
     def clean_string(self, string):
         self.decontracted_string(string)
