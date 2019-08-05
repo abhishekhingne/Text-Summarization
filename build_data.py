@@ -14,9 +14,13 @@ class BuildData:
         self.article_list = ""
         self.summary_list = ""
 
-    def load_data(self):
-        self.article_list = self.get_clean_data_list(ARTICLE_PATH)
-        self.summary_list = self.get_clean_data_list(SUMMARY_PATH)
+    def load_data(self, mode):
+        if mode == 'train':
+            self.article_list = self.get_clean_data_list(ARTICLE_PATH)
+            self.summary_list = self.get_clean_data_list(SUMMARY_PATH)
+        if mode == 'valid':
+            self.article_list = self.get_clean_data_list(VALID_ARTICLE_PATH)
+            self.summary_list = self.get_clean_data_list(VALID_SUMMARY_PATH)
 
     def get_clean_data_list(self, path):
         lines = self.preprocess.read_data(path)
