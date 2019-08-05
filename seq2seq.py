@@ -66,3 +66,34 @@ class TextSummarization:
                     saver.save(sess, MODEL_PATH + "model.ckpt", global_step=step)
                     print(" Epoch {0}: Model is saved.".format(step // num_batches_per_epoch),
                           "Elapsed: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds), "\n")
+
+    def get_summary(self, x, reversed_word_dict):
+        summary_text = []
+        with tf.Session() as sess:
+            model = Model(reversed_word_dict, MAX_ARTICLE_LEN, MAX_SUMMARY_LEN, self.embedding_size, self.num_hidden,
+                          self.num_layers, self.learning_rate, self.beam_width, self.keep_prob)
+            try:
+                saver = tf.train.Saver(tf.global_variables())
+                ckpt = tf.train.get_checkpoint_state(MODEL_PATH)
+                saver.restore(sess, ckpt.model_checkpoint_path)
+            except KeyError:
+                print("Model path does'nt exists")
+            batches = self.data.batch_iter(x, [0]*len(x), 1, 1)
+            for batch_x, _ in batches:
+                batch_x_len = [len([y for y in x if y != 0]) for x in batch_x]
+                feed_dict = {
+                    model.batch_size: len(batch_x),
+                    model.X: batch_x,
+                    model.X_len: batch_x_len
+                }
+                prediction = sess.run(model.prediction, feed_dict=feed_dict)
+                text = [[reversed_word_dict[y] for y in x] for x in prediction[:, 0, :]]
+                summary = []
+                for word in text[0]:
+                    if word == '</s>':
+                        break
+                    if word not in summ:
+                        summary.append(word)
+                txt = " ".join(summary)
+                summary_text.append(txt)
+        return summary_text
