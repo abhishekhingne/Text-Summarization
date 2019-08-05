@@ -1,6 +1,8 @@
 from build_data import BuildData
 from seq2seq import TextSummarization
 import argparse
+import pickle
+from config import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -32,8 +34,18 @@ if __name__ == "__main__":
                                            batch_size=batch_size, num_epochs=num_epochs, keep_prob=keep_prob,
                                            with_model=False)
     if mode == "train":
-        data.load_data()
+        data.load_data(mode=mode)
         data.build_dict()
         train_x, train_y = data.build_dataset
         text_summarization.start_training(train_x=train_x, train_y=train_y, word_dict=data.word_dict,
                                           reversed_word_dict=data.reversed_word_dict)
+    if mode == 'valid':
+        data.load_data(mode=mode)
+        data.build_dict()
+        test_x, test_y = data.build_dataset
+        file = open(WORD_DICT_PATH, "rb")
+        reversed_word_dict = pickle.load(file, encoding="utf-8")
+        op = text_summarization.get_summary(test_x, reversed_word_dict)
+        with open(RESULT_PATH, 'a') as f:
+            for r in op:
+                print(r, file=f)
