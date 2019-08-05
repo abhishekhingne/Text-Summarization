@@ -48,10 +48,13 @@ class BuildData:
         x = [[self.word_dict.get(w, self.word_dict["<unk>"]) for w in d] for d in x]
         x = [d[:(MAX_ARTICLE_LEN - 1)] for d in x]
         x = [d + (MAX_ARTICLE_LEN - len(d)) * [self.word_dict["<padding>"]] for d in x]
-
-        y = [nltk.word_tokenize(word) for word in self.summary_list]
-        y = [[self.word_dict.get(w, self.word_dict["<unk>"]) for w in d] for d in y]
-        y = [d[:(MAX_SUMMARY_LEN - 1)] for d in y]
+        y = []
+        try:
+            y = [nltk.word_tokenize(word) for word in self.summary_list]
+            y = [[self.word_dict.get(w, self.word_dict["<unk>"]) for w in d] for d in y]
+            y = [d[:(MAX_SUMMARY_LEN - 1)] for d in y]
+        except KeyError:
+            pass
         return x, y
 
     @staticmethod
