@@ -8,7 +8,7 @@ from config import *
 class TextSummarization:
 
     def __init__(self, num_hidden=150, num_layers=2, beam_width=10, embedding_size=300, learning_rate=1e-3,
-                 batch_size=64, num_epochs=100, keep_prob=0.8, with_model=False):
+                 batch_size=64, num_epochs=100, keep_prob=0.8, forward_only=False, with_model=False):
         self.num_hidden = num_hidden
         self.num_layers = num_layers
         self.beam_width = beam_width
@@ -17,6 +17,7 @@ class TextSummarization:
         self.batch_size = batch_size
         self.num_epochs = num_epochs
         self.keep_prob = keep_prob
+        self.forward_only = forward_only
         self.with_model = with_model
         self.data = BuildData()
         self.start_time = time.time()
@@ -69,9 +70,11 @@ class TextSummarization:
 
     def get_summary(self, x, reversed_word_dict):
         summary_text = []
+        tf.reset_default_graph()
         with tf.Session() as sess:
             model = Model(reversed_word_dict, MAX_ARTICLE_LEN, MAX_SUMMARY_LEN, self.embedding_size, self.num_hidden,
-                          self.num_layers, self.learning_rate, self.beam_width, self.keep_prob)
+                          self.num_layers, self.learning_rate, self.beam_width, self.keep_prob,
+                          forward_only=self.forward_only)
             try:
                 saver = tf.train.Saver(tf.global_variables())
                 ckpt = tf.train.get_checkpoint_state(MODEL_PATH)
@@ -92,7 +95,7 @@ class TextSummarization:
                 for word in text[0]:
                     if word == '</s>':
                         break
-                    if word not in summ:
+                    if word not in summary:
                         summary.append(word)
                 txt = " ".join(summary)
                 summary_text.append(txt)

@@ -27,11 +27,16 @@ if __name__ == "__main__":
     num_epochs = args.num_epochs
     keep_prob = args.keep_prob
     mode = args.mode
+    if mode == 'train':
+        forward_only = False
+    else:
+        forward_only = True
     with_model = args.with_model
     data = BuildData()
     text_summarization = TextSummarization(num_hidden=num_hidden, num_layers=num_layers, beam_width=beam_width,
                                            embedding_size=embedding_size, learning_rate=learning_rate,
                                            batch_size=batch_size, num_epochs=num_epochs, keep_prob=keep_prob,
+                                           forward_only=forward_only,
                                            with_model=False)
     if mode == "train":
         data.load_data(mode=mode)
@@ -41,8 +46,7 @@ if __name__ == "__main__":
                                           reversed_word_dict=data.reversed_word_dict)
     if mode == 'valid':
         data.load_data(mode=mode)
-        data.build_dict()
-        test_x, test_y = data.build_dataset
+        test_x, test_y = data.build_dataset(mode=mode)
         file = open(WORD_DICT_PATH, "rb")
         reversed_word_dict = pickle.load(file, encoding="utf-8")
         op = text_summarization.get_summary(test_x, reversed_word_dict)

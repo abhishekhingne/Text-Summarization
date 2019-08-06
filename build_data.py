@@ -46,8 +46,11 @@ class BuildData:
             pickle.dump(self.word_dict, f)
         self.reversed_word_dict = dict(zip(self.word_dict.values(), self.word_dict.keys()))
 
-    @property
-    def build_dataset(self):
+    def build_dataset(self, mode):
+        if mode == 'valid':
+            with open(WORD_DICT_PATH, "rb") as f:
+                self.word_dict = pickle.load(f, encoding='utf-8')
+            self.reversed_word_dict = dict(zip(self.word_dict.values(), self.word_dict.keys()))
         x = [nltk.word_tokenize(word) for word in self.article_list]
         x = [[self.word_dict.get(w, self.word_dict["<unk>"]) for w in d] for d in x]
         x = [d[:(MAX_ARTICLE_LEN - 1)] for d in x]
