@@ -41,7 +41,7 @@ if __name__ == "__main__":
     if mode == "train":
         data.load_data(mode=mode)
         data.build_dict()
-        train_x, train_y = data.build_dataset
+        train_x, train_y = data.build_dataset(mode=mode)
         text_summarization.start_training(train_x=train_x, train_y=train_y, word_dict=data.word_dict,
                                           reversed_word_dict=data.reversed_word_dict)
     if mode == 'valid':
